@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="%LANG_ISO_CODE%">
+  <head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+    <title>%WEB_TITLE%</title>
+
+    <meta name="description" content="Learn Python from scratch with PyMastery — a free, complete Python programming course. 10 modules, 42 lessons, interactive quizzes, XP & streaks, and progress tracking. Available as a web app and mobile app." />
+    <meta name="keywords" content="learn python, python course, python tutorial, python for beginners, free python course, python programming, coding course, python quiz, PyMastery, TheKhanDev" />
+    <meta name="author" content="TheKhanDev" />
+    <meta name="theme-color" content="#0a0e17" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PyMastery" />
+    <meta property="og:title" content="PyMastery — Complete Python Course" />
+    <meta property="og:description" content="Learn Python from scratch: 10 modules, 42 lessons, interactive quizzes, and progress tracking. 100% free." />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PyMastery — Complete Python Course" />
+    <meta name="twitter:description" content="Learn Python from scratch: 10 modules, 42 lessons, interactive quizzes, and progress tracking. 100% free." />
+    <meta name="twitter:image" content="/og-image.png" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="PyMastery" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      html,
+      body {
+        height: 100%;
+        background-color: #0a0e17;
+      }
+      body {
+        overflow: hidden;
+      }
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+
+      /* Initial boot loading screen, shown until the JS bundle mounts the app */
+      #boot-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at 30% 20%, rgba(75,139,190,0.25), transparent 55%),
+                    radial-gradient(circle at 80% 85%, rgba(255,212,59,0.18), transparent 55%),
+                    #0a0e17;
+        transition: opacity 0.35s ease;
+      }
+      #boot-loader.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #boot-loader .mark {
+        position: relative;
+        width: 84px;
+        height: 84px;
+        margin-bottom: 20px;
+      }
+      #boot-loader .mark .sq {
+        position: absolute;
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+      }
+      #boot-loader .mark .sq.blue {
+        top: 0;
+        left: 0;
+        background: #4b8bbe;
+      }
+      #boot-loader .mark .sq.yellow {
+        bottom: 0;
+        right: 0;
+        background: #ffd43b;
+        animation: pulse 1.4s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(0.92); opacity: 0.75; }
+      }
+      #boot-loader .brand {
+        color: #f1f5f9;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+      }
+      #boot-loader .tagline {
+        color: #6c7891;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-size: 13px;
+        margin-top: 6px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Use static rendering with Expo Router to support running without JavaScript. -->
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+
+    <div id="boot-loader">
+      <div class="mark">
+        <div class="sq blue"></div>
+        <div class="sq yellow"></div>
+      </div>
+      <div class="brand">PyMastery</div>
+      <div class="tagline">Loading your Python course…</div>
+    </div>
+
+    <!-- The root element for your Expo app. -->
+    <div id="root"></div>
+
+    <script>
+      // Hide the boot loader once React Native Web has mounted content into #root.
+      (function () {
+        var attempts = 0;
+        var maxAttempts = 200; // ~10s safety net
+        var interval = setInterval(function () {
+          attempts++;
+          var root = document.getElementById('root');
+          var loader = document.getElementById('boot-loader');
+          if (root && root.children.length > 0) {
+            clearInterval(interval);
+            if (loader) {
+              loader.classList.add('hidden');
+              setTimeout(function () {
+                loader.remove();
+              }, 400);
+            }
+          } else if (attempts >= maxAttempts) {
+            clearInterval(interval);
+            if (loader) loader.remove();
+          }
+        }, 50);
+      })();
+    </script>
+  </body>
+</html>

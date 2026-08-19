@@ -1,0 +1,219 @@
+import { Platform } from 'react-native';
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
+import { modules } from './courseData';
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function buildNotesHtml(): string {
+  const moduleSections = modules
+    .map((mod) => {
+      const lessonBlocks = mod.lessons
+        .map(
+          (lesson) => `
+            <div class="lesson">
+              <h3>${escapeHtml(lesson.title)} <span class="mins">(${lesson.minutes} min)</span></h3>
+              <p class="summary">${escapeHtml(lesson.summary)}</p>
+              <p class="label">Key Takeaways</p>
+              <ul class="keypoints">
+                ${lesson.keyPoints.map((kp) => `<li>${escapeHtml(kp)}</li>`).join('')}
+              </ul>
+              ${lesson.commonMistakes && lesson.commonMistakes.length > 0 ? `
+              <p class="label mistakes-label">Common Mistakes / Quirks</p>
+              <ul class="mistakes">
+                ${lesson.commonMistakes.map((cm) => `<li>${escapeHtml(cm)}</li>`).join('')}
+              </ul>` : ''}
+            </div>`
+        )
+        .join('');
+
+      return `
+        <section class="module">
+          <h2><span class="badge">Module ${mod.order}</span> ${escapeHtml(mod.title)}</h2>
+          <p class="subtitle">${escapeHtml(mod.subtitle)}</p>
+          ${lessonBlocks}
+        </section>`;
+    })
+    .join('');
+
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8" />
+        <title>PyMastery — Course Notes</title>
+        <style>
+          @page { margin: 32px; }
+          * { box-sizing: border-box; }
+          body {
+            font-family: -apple-system, Helvetica, Arial, sans-serif;
+            color: #1a1a1a;
+            line-height: 1.5;
+            padding: 0 8px;
+          }
+          .cover {
+            text-align: center;
+            padding: 40px 0 24px;
+            border-bottom: 3px solid #ffd43b;
+            margin-bottom: 24px;
+          }
+          .cover h1 {
+            font-size: 32px;
+            margin: 0 0 6px;
+            color: #1a1a1a;
+          }
+          .cover p {
+            color: #555;
+            font-size: 14px;
+            margin: 2px 0;
+          }
+          .module {
+            margin-bottom: 26px;
+            page-break-inside: avoid;
+          }
+          .module h2 {
+            font-size: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 6px;
+            margin-bottom: 4px;
+            color: #16325c;
+          }
+          .badge {
+            display: inline-block;
+            background: #ffd43b;
+            color: #1a1a1a;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-right: 8px;
+            vertical-align: middle;
+          }
+          .subtitle {
+            color: #666;
+            font-size: 13px;
+            margin: 0 0 12px;
+            font-style: italic;
+          }
+          .lesson {
+            margin: 12px 0 16px 8px;
+            padding-left: 12px;
+            border-left: 3px solid #e2e8f0;
+          }
+          .lesson h3 {
+            font-size: 15px;
+            margin: 0 0 4px;
+            color: #222;
+          }
+          .mins {
+            font-weight: 400;
+            font-size: 12px;
+            color: #888;
+          }
+          .summary {
+            font-size: 13px;
+            color: #444;
+            margin: 0 0 6px;
+          }
+          .label {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 8px 0 3px;
+          }
+          .mistakes-label {
+            color: #b45309;
+          }
+          .keypoints {
+            margin: 0;
+            padding-left: 18px;
+          }
+          .keypoints li {
+            font-size: 12.5px;
+            color: #333;
+            margin-bottom: 3px;
+          }
+          .mistakes {
+            margin: 0;
+            padding-left: 18px;
+          }
+          .mistakes li {
+            font-size: 12px;
+            color: #7a4a00;
+            margin-bottom: 4px;
+          }
+          .footer {
+            text-align: center;
+            color: #999;
+            font-size: 11px;
+            margin-top: 32px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="cover">
+          <h1>🐍 PyMastery</h1>
+          <p>Complete Python Course — Study Notes</p>
+          <p>${modules.length} Modules · ${modules.reduce((s, m) => s + m.lessons.length, 0)} Lessons</p>
+        </div>
+        ${moduleSections}
+        <div class="footer">
+          Generated by PyMastery · Built by TheKhanDev · thekhandev.pk@gmail.com
+        </div>
+      </body>
+    </html>
+  `;
+}
+
+export interface DownloadNotesResult {
+  ok: boolean;
+  message?: string;
+}
+
+export async function downloadNotesPdf(): Promise<DownloadNotesResult> {
+  const html = buildNotesHtml();
+
+  if (Platform.OS === 'web') {
+    try {
+      const printWindow = window.open('', '_blank');
+      if (!printWindow) {
+        return { ok: false, message: 'Please allow pop-ups for this site to download the notes PDF.' };
+      }
+      printWindow.document.open();
+      printWindow.document.write(html);
+      printWindow.document.close();
+      // Give the browser a moment to render before invoking print (Save as PDF).
+      setTimeout(() => {
+        printWindow.focus();
+        printWindow.print();
+      }, 350);
+      return { ok: true, message: 'Use "Save as PDF" in the print dialog to download your notes.' };
+    } catch (e) {
+      return { ok: false, message: 'Could not open the notes. Please try again.' };
+    }
+  }
+
+  try {
+    const { uri } = await Print.printToFileAsync({ html, base64: false });
+    const canShare = await Sharing.isAvailableAsync();
+    if (canShare) {
+      await Sharing.shareAsync(uri, {
+        mimeType: 'application/pdf',
+        dialogTitle: 'PyMastery Course Notes',
+        UTI: 'com.adobe.pdf',
+      });
+    }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, message: 'Could not generate the PDF. Please try again.' };
+  }
+}

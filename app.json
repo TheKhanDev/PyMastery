@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "Agon Preview",
+    "slug": "agon-preview",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0a0e17",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#0a0e17"
+    },
+    "description": "Learn Python from scratch with PyMastery \u2014 a free, complete Python programming course featuring 10 modules, 42 lessons, interactive quizzes, and progress tracking.",
+    "primaryColor": "#ffd43b",
+    "ios": {
+      "supportsTablet": true,
+      "backgroundColor": "#0a0e17"
+    },
+    "android": {
+      "package": "com.thekhandev.pymastery",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#0a0e17",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "name": "PyMastery",
+      "shortName": "PyMastery",
+      "description": "Learn Python from scratch with a free, complete Python programming course.",
+      "themeColor": "#0a0e17",
+      "backgroundColor": "#0a0e17",
+      "lang": "en"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "552f0665-e30d-4f11-9ea9-97bc22a22809"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/552f0665-e30d-4f11-9ea9-97bc22a22809"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "owner": "arcadalabs",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "plugins": [
+      "expo-sharing"
+    ]
+  }
+}
